@@ -75,6 +75,8 @@ $(document).ready(function() {
 
   socket.on('sporocilo', function (sporocilo) {
     var novElement = divElementEnostavniTekst(sporocilo.besedilo);
+    var original = sporocilo.besedilo;
+    var temp = original.substr(original.indexOf(" ") + 1);
     $('#sporocila').append(novElement);
   });
   
