@@ -21,11 +21,13 @@ function procesirajVnosUporabnika(klepetApp, socket) {
     sistemskoSporocilo = klepetApp.procesirajUkaz(sporocilo);
     if (sistemskoSporocilo) {
       $('#sporocila').append(divElementHtmlTekst(sistemskoSporocilo));
+      dodajVideo(sporocilo, true);
     }
   } else {
     sporocilo = filtirirajVulgarneBesede(sporocilo);
     klepetApp.posljiSporocilo(trenutniKanal, sporocilo);
     $('#sporocila').append(divElementEnostavniTekst(sporocilo));
+    dodajVideo(sporocilo, false);
     $('#sporocila').scrollTop($('#sporocila').prop('scrollHeight'));
   }
 
@@ -75,9 +77,10 @@ $(document).ready(function() {
 
   socket.on('sporocilo', function (sporocilo) {
     var novElement = divElementEnostavniTekst(sporocilo.besedilo);
+    $('#sporocila').append(novElement);
     var original = sporocilo.besedilo;
     var temp = original.substr(original.indexOf(" ") + 1);
-    $('#sporocila').append(novElement);
+    dodajVideo(temp, false);
   });
   
   socket.on('kanali', function(kanali) {
@@ -125,7 +128,7 @@ function dodajSmeske(vhodnoBesedilo) {
     "(y)": "like.png",
     ":*": "kiss.png",
     ":(": "sad.png"
-  }
+  };
   for (var smesko in preslikovalnaTabela) {
     vhodnoBesedilo = vhodnoBesedilo.replace(smesko,
       "<img src='http://sandbox.lavbic.net/teaching/OIS/gradivo/" +
@@ -142,14 +145,16 @@ function dodajVideo(vhodnoBesedilo, zasebno) {
   if(zasebno) {
       for(var i = 0; i < str.length; i++) {
       if(/^"?^https:\/\/www\.youtube\.com\/watch\?v=\w{11}$"?$/m.test(str[i])) {
-        $("#sporocila").append("<div class=" + _class + "><iframe src='" + str[i]  + "' width='" + _sirina + " height='" + _visina +"' allowfullscreen></iframe></div>");
+        var IDvidea = str[i].match(/\w{11}$/m);
+        $("#sporocila").append("<div class=" + _class + "><iframe src='https://www.youtube.com/embed/" + IDvidea + "' width=" + _sirina + " height=" + _visina +" allowfullscreen></iframe></div>");
       }
     }
   }
   else {
       for(var i = 0; i < str.length; i++) {
       if(/^https:\/\/www\.youtube\.com\/watch\?v=\w{11}$/m.test(str[i])) {
-        $("#sporocila").append("<div class=" + _class + "><iframe src='" + str[i]  + "' width='" + _sirina + " height='" + _visina +"' allowfullscreen></iframe></div>");
+        var IDvidea = str[i].match(/\w{11}$/m);
+        $("#sporocila").append("<div class=" + _class + "><iframe src='https://www.youtube.com/embed/" + IDvidea + "' width=" + _sirina + " height=" + _visina +" allowfullscreen></iframe></div>");
       }
     }
   }
