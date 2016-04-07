@@ -21,14 +21,16 @@ function procesirajVnosUporabnika(klepetApp, socket) {
     sistemskoSporocilo = klepetApp.procesirajUkaz(sporocilo);
     if (sistemskoSporocilo) {
       $('#sporocila').append(divElementHtmlTekst(sistemskoSporocilo));
+      dodajSlike(sporocilo, true);
     }
   } else {
     sporocilo = filtirirajVulgarneBesede(sporocilo);
     klepetApp.posljiSporocilo(trenutniKanal, sporocilo);
     $('#sporocila').append(divElementEnostavniTekst(sporocilo));
-    dodajSlike(sporocilo);
+    dodajSlike(sporocilo, false);
     $('#sporocila').scrollTop($('#sporocila').prop('scrollHeight'));
   }
+  
   $('#poslji-sporocilo').val('');
 }
 
@@ -78,7 +80,7 @@ $(document).ready(function() {
     $('#sporocila').append(novElement);
     var original = sporocilo.besedilo;
     var temp = original.substr(original.indexOf(" ") + 1);
-    dodajSlike(temp);
+    dodajSlike(temp, false);
   });
   
   socket.on('kanali', function(kanali) {
@@ -115,8 +117,6 @@ $(document).ready(function() {
     procesirajVnosUporabnika(klepetApp, socket);
     return false;
   });
-  
-  
 });
 
 function dodajSmeske(vhodnoBesedilo) {
@@ -135,11 +135,24 @@ function dodajSmeske(vhodnoBesedilo) {
   return vhodnoBesedilo;
 }
 
-function dodajSlike(vhodnoBesedilo) {
+function dodajSlike(vhodnoBesedilo, zasebno) {
   var str = vhodnoBesedilo.split(" ");
-  for(var i = 0; i < str.length; i++) {
-    if(/^(https?:\/\/[^\s]+)/m.test(str[i]) && /((.png)|(.jpg)|(.gif))$/m.test(str[i])) {
-      $("#sporocila").append("<div><img src=" + str[i]  +"></div>");
+  console.log(str);
+  var _sirina = 200;
+  var _class = "slike";
+  if(zasebno) {
+      for(var i = 0; i < str.length; i++) {
+      if(/^("?https?:\/\/[^\s]+)/m.test(str[i]) && /((.png"?)|(.jpg"?)|(.gif"?))$/m.test(str[i])) {
+        $("#sporocila").append("<div class=" + _class + "><img src=" + str[i]  + " width=" + _sirina + "></div>");
+      }
     }
   }
+  else {
+      for(var i = 0; i < str.length; i++) {
+      if(/^(https?:\/\/[^\s]+)/m.test(str[i]) && /((.png)|(.jpg)|(.gif))$/m.test(str[i])) {
+        $("#sporocila").append("<div class=" + _class + "><img src=" + str[i]  + " width=" + _sirina + "></div>");
+      }
+    }
+  }
+  
 }
