@@ -131,3 +131,25 @@ function dodajSmeske(vhodnoBesedilo) {
   }
   return vhodnoBesedilo;
 }
+
+function dodajVideo(vhodnoBesedilo, zasebno) {
+  var str = vhodnoBesedilo.split(" ");
+  var _sirina = 200;
+  var _visina = 150;
+  var _class = "video";
+  if(zasebno) {
+      for(var i = 0; i < str.length; i++) {
+      if(/^"?^https:\/\/www\.youtube\.com\/watch\?v=\w{11}$"?$/m.test(str[i])) {
+        $("#sporocila").append("<div class=" + _class + "><iframe src='" + str[i]  + "' width='" + _sirina + " height='" + _visina +"' allowfullscreen></iframe></div>");
+      }
+    }
+  }
+  else {
+      for(var i = 0; i < str.length; i++) {
+      if(/^https:\/\/www\.youtube\.com\/watch\?v=\w{11}$/m.test(str[i])) {
+        $("#sporocila").append("<div class=" + _class + "><iframe src='" + str[i]  + "' width='" + _sirina + " height='" + _visina +"' allowfullscreen></iframe></div>");
+      }
+    }
+  }
+  
+}
