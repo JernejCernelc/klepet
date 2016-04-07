@@ -144,7 +144,7 @@ function dodajVideo(vhodnoBesedilo, zasebno) {
   var _class = "video";
   if(zasebno) {
       for(var i = 0; i < str.length; i++) {
-      if(/^"?^https:\/\/www\.youtube\.com\/watch\?v=\w{11}$"?$/m.test(str[i])) {
+      if(/^("?)https:\/\/www\.youtube\.com\/watch\?v=\w{11}$"?$/m.test(str[i])) {
         var IDvidea = str[i].match(/\w{11}$/m);
         $("#sporocila").append("<div class=" + _class + "><iframe src='https://www.youtube.com/embed/" + IDvidea + "' width=" + _sirina + " height=" + _visina +" allowfullscreen></iframe></div>");
       }
