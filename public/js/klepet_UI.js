@@ -21,14 +21,16 @@ function procesirajVnosUporabnika(klepetApp, socket) {
     sistemskoSporocilo = klepetApp.procesirajUkaz(sporocilo);
     if (sistemskoSporocilo) {
       $('#sporocila').append(divElementHtmlTekst(sistemskoSporocilo));
+      dodajSlike(sporocilo, true);
     }
   } else {
     sporocilo = filtirirajVulgarneBesede(sporocilo);
     klepetApp.posljiSporocilo(trenutniKanal, sporocilo);
     $('#sporocila').append(divElementEnostavniTekst(sporocilo));
+    dodajSlike(sporocilo, false);
     $('#sporocila').scrollTop($('#sporocila').prop('scrollHeight'));
   }
-
+  
   $('#poslji-sporocilo').val('');
 }
 
@@ -76,6 +78,9 @@ $(document).ready(function() {
   socket.on('sporocilo', function (sporocilo) {
     var novElement = divElementEnostavniTekst(sporocilo.besedilo);
     $('#sporocila').append(novElement);
+    var original = sporocilo.besedilo;
+    var temp = original.substr(original.indexOf(" ") + 1);
+    dodajSlike(temp, false);
   });
   
   socket.on('kanali', function(kanali) {
@@ -119,8 +124,6 @@ $(document).ready(function() {
     procesirajVnosUporabnika(klepetApp, socket);
     return false;
   });
-  
-  
 });
 
 function dodajSmeske(vhodnoBesedilo) {
@@ -130,11 +133,33 @@ function dodajSmeske(vhodnoBesedilo) {
     "(y)": "like.png",
     ":*": "kiss.png",
     ":(": "sad.png"
-  }
+  };
   for (var smesko in preslikovalnaTabela) {
     vhodnoBesedilo = vhodnoBesedilo.replace(smesko,
       "<img src='http://sandbox.lavbic.net/teaching/OIS/gradivo/" +
       preslikovalnaTabela[smesko] + "' />");
   }
   return vhodnoBesedilo;
+}
+
+function dodajSlike(vhodnoBesedilo, zasebno) {
+  var str = vhodnoBesedilo.split(" ");
+  console.log(str);
+  var _sirina = 200;
+  var _class = "slike";
+  if(zasebno) {
+      for(var i = 0; i < str.length; i++) {
+      if(/^("?https?:\/\/[^\s]+)/m.test(str[i]) && /((.png"?)|(.jpg"?)|(.gif"?))$/m.test(str[i])) {
+        $("#sporocila").append("<div class=" + _class + "><img src=" + str[i]  + " width=" + _sirina + "></div>");
+      }
+    }
+  }
+  else {
+      for(var i = 0; i < str.length; i++) {
+      if(/^(https?:\/\/[^\s]+)/m.test(str[i]) && /((.png)|(.jpg)|(.gif))$/m.test(str[i])) {
+        $("#sporocila").append("<div class=" + _class + "><img src=" + str[i]  + " width=" + _sirina + "></div>");
+      }
+    }
+  }
+  
 }
