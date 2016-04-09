@@ -124,6 +124,17 @@ $(document).ready(function() {
       $('#poslji-sporocilo').focus();
     });
   });
+  
+  socket.on('dregljaj', function(dregljaj) {
+    if(dregljaj.dregljaj) {
+      var _vsebina =  $('#vsebina');
+      _vsebina.jrumble();
+      _vsebina.trigger('startRumble');
+      setTimeout(function() {
+        _vsebina.trigger('stopRumble');
+      }, 1500);
+    }
+  });
 
   setInterval(function() {
     socket.emit('kanali');
