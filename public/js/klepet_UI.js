@@ -21,13 +21,21 @@ function procesirajVnosUporabnika(klepetApp, socket) {
     sistemskoSporocilo = klepetApp.procesirajUkaz(sporocilo);
     if (sistemskoSporocilo) {
       $('#sporocila').append(divElementHtmlTekst(sistemskoSporocilo));
+<<<<<<< HEAD
       dodajSlike(sporocilo, true);
+=======
+      dodajVideo(sporocilo, true);
+>>>>>>> youtube
     }
   } else {
     sporocilo = filtirirajVulgarneBesede(sporocilo);
     klepetApp.posljiSporocilo(trenutniKanal, sporocilo);
     $('#sporocila').append(divElementEnostavniTekst(sporocilo));
+<<<<<<< HEAD
     dodajSlike(sporocilo, false);
+=======
+    dodajVideo(sporocilo, false);
+>>>>>>> youtube
     $('#sporocila').scrollTop($('#sporocila').prop('scrollHeight'));
   }
   
@@ -80,7 +88,11 @@ $(document).ready(function() {
     $('#sporocila').append(novElement);
     var original = sporocilo.besedilo;
     var temp = original.substr(original.indexOf(" ") + 1);
+<<<<<<< HEAD
     dodajSlike(temp, false);
+=======
+    dodajVideo(temp, false);
+>>>>>>> youtube
   });
   
   socket.on('kanali', function(kanali) {
@@ -142,6 +154,7 @@ function dodajSmeske(vhodnoBesedilo) {
   return vhodnoBesedilo;
 }
 
+<<<<<<< HEAD
 function dodajSlike(vhodnoBesedilo, zasebno) {
   var str = vhodnoBesedilo.split(" ");
   console.log(str);
@@ -151,15 +164,44 @@ function dodajSlike(vhodnoBesedilo, zasebno) {
       for(var i = 0; i < str.length; i++) {
       if(/^("?https?:\/\/[^\s]+)/m.test(str[i]) && /((.png"?)|(.jpg"?)|(.gif"?))$/m.test(str[i])) {
         $("#sporocila").append("<div class=" + _class + "><img src=" + str[i]  + " width=" + _sirina + "></div>");
+=======
+function dodajVideo(vhodnoBesedilo, zasebno) {
+  var str = vhodnoBesedilo.split(" ");
+  var _sirina = 200;
+  var _visina = 150;
+  var _class = "video";
+  if(zasebno) {
+      for(var i = 0; i < str.length; i++) {
+      if(/^("?https):\/\/www\.youtube\.com\/watch\?v=(\w{11}"?)$/m.test(str[i])) {
+        var IDvidea;
+        if(/\w{11}$/m.test(str[i])) {
+          IDvidea = str[i].match(/\w{11}$/m);
+        }
+        else {
+          IDvidea = str[i].match(/(\w{11}")$/m);
+
+          IDvidea[0] = IDvidea[0].slice(0,11);
+        }
+        $("#sporocila").append("<div class=" + _class + "><iframe src='https://www.youtube.com/embed/" + IDvidea[0] + "' width=" + _sirina + " height=" + _visina +" allowfullscreen></iframe></div>");
+>>>>>>> youtube
       }
     }
   }
   else {
       for(var i = 0; i < str.length; i++) {
+<<<<<<< HEAD
       if(/^(https?:\/\/[^\s]+)/m.test(str[i]) && /((.png)|(.jpg)|(.gif))$/m.test(str[i])) {
         $("#sporocila").append("<div class=" + _class + "><img src=" + str[i]  + " width=" + _sirina + "></div>");
       }
     }
   }
   
+=======
+      if(/^https:\/\/www\.youtube\.com\/watch\?v=\w{11}$/m.test(str[i])) {
+        var IDvidea = str[i].match(/\w{11}$/m);
+        $("#sporocila").append("<div class=" + _class + "><iframe src='https://www.youtube.com/embed/" + IDvidea + "' width=" + _sirina + " height=" + _visina +" allowfullscreen></iframe></div>");
+      }
+    }
+  }
+>>>>>>> youtube
 }
